@@ -15,17 +15,17 @@ export async function POST(request) {
       })
     }
 
-    // Limpa tudo! Deixa SÓ os números.
-    const apenasNumeros = dataNascimento.replace(/\D/g, '')
+    // 1. Limpa o que o usuário digitou (deixa só números)
+    const digitosUsuario = dataNascimento.replace(/\D/g, '')
 
-    if (apenasNumeros.length !== 8) {
+    if (digitosUsuario.length !== 8) {
       return new Response(JSON.stringify({ error: 'Digite a data completa com 8 números.' }), { 
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       })
     }
 
-    // Busca todos os atletas para fazer filtro inteligente em memória (mata fuso horário)
+    // 2. Busca todos os atletas
     const { data: atletas, error } = await supabase
       .from('atletas')
       .select('*')
@@ -37,37 +37,45 @@ export async function POST(request) {
       })
     }
 
-    // Varre a lista limpando traços e comparando puro número, não importa a ordem de digitação
+    // 3. Cria combinações automáticas do que foi digitado para não errar nunca
+    const dia = digitosUsuario.substring(0, 2)
+    const mes = digitosUsuario.substring(2, 4)
+    const ano = digitosUsuario.substring(4, 8)
+
+    const formatoBR = `${dia}${mes}${ano}` // 11081983
+    const formatoISO = `${ano}${mes}${dia}` // 19830811
+    const formatoInvertidoBR = `${mes}${dia}${ano}` // 08111983
+    const formatoInvertidoISO = `${ano}${dia}${mes}` // 19831108 (O formato que você viu no banco!)
+
+    // 4. Varre os atletas procurando qualquer uma das combinações
     const atletaEncontrado = atletas.find(atleta => {
       if (!atleta.data_nascimento) return false
       
-      const dataBancoLimpa = atleta.data_nascimento.replace(/\D/g, '') // "19831108"
+      const digitosBanco = atleta.data_nascimento.replace(/\D/g, '')
       
-      return dataBancoLimpa.includes(apenasNumeros) || 
-             apenasNumeros.includes(dataBancoLimpa) ||
-             (apenasNumeros.substring(0,4) === dataBancoLimpa.substring(4,8) && 
-              apenasNumeros.substring(4,6) === dataBancoLimpa.substring(2,4) && 
-              apenasNumeros.substring(6,8) === dataBancoLimpa.substring(0,2)) ||
-             (apenasNumeros.substring(4,8) === dataBancoLimpa.substring(0,4) && 
-              apenasNumeros.substring(2,4) === dataBancoLimpa.substring(4,6) && 
-              apenasNumeros.substring(0,2) === dataBancoLimpa.substring(6,8))
+      // Corta caso o banco traga horas junto (pega só os primeiros 8 números do banco)
+      const apenasDataBanco = digitosBanco.substring(0, 8)
+
+      return apenasDataBanco === formatoBR || 
+             apenasDataBanco === formatoISO || 
+             apenasDataBanco === formatoInvertidoBR || 
+             apenasDataBanco === formatoInvertidoISO
     })
 
     if (!atletaEncontrado) {
-      return new Response(JSON.stringify({ error: 'Atleta não encontrado com essa data.' }), { 
+      return new Response(JSON.stringify({ error: `Atleta não encontrado para os dígitos: ${digitosUsuario}` }), { 
         status: 404,
         headers: { 'Content-Type': 'application/json' }
       })
     }
 
-    // Sucesso absoluto!
+    // Sucesso!
     return new Response(JSON.stringify(atletaEncontrado), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     })
 
   } catch (err) {
-    // Garante que qualquer quebra séria responda um JSON válido e impeça o Unexpected end input
     return new Response(JSON.stringify({ error: 'Erro interno no servidor.', detalhes: err.message }), { 
       status: 500,
       headers: { 'Content-Type': 'application/json' }

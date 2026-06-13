@@ -94,7 +94,7 @@ export default function AtletaLogin() {
       </main>
 
       <footer className={styles.footer}>
-        <p>© KFC 2026 (v1.0.9) - Todos os direitos reservados</p>
+        <p>© KFC 2026 (v1.1.0) - Todos os direitos reservados</p>
       </footer>
 
     </div>
