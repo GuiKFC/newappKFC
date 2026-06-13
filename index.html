@@ -27,7 +27,7 @@
             
             <div class="mb-4 text-left">
                 <label class="block text-sm font-semibold mb-2">Sua Senha (DD/MM/AAAA):</label>
-                <input type="text" id="birthdate-input" placeholder="Ex: 13/12/1998" 
+                <input type="text" id="birthdate-input" placeholder="Ex: 10/10/1985" 
                        class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-700 text-center text-lg tracking-widest">
             </div>
             
@@ -41,7 +41,7 @@
             <div class="bg-white p-6 rounded-xl shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
                 <div>
                     <h2 class="text-xl font-bold">Fala, <span id="player-name" class="text-kfc">Jogador</span>! 👋</h2>
-                    <p class="text-sm text-gray-500 mt-1">Número de Camisa Oficial: <span id="player-number" class="font-bold text-gray-800">--</span></p>
+                    <p class="text-sm text-gray-500 mt-1">Camisa Oficial: <span id="player-number" class="font-bold text-gray-800">--</span> | No KFC desde: <span id="player-since" class="font-bold text-gray-800">--</span></p>
                 </div>
                 <button onclick="logout()" class="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-700">
                     Sair do Sistema
@@ -53,39 +53,23 @@
                 
                 <div class="space-y-4">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-3 bg-gray-50 rounded-lg gap-2">
-                        <div>
-                            <span class="font-bold block">Camisa de Jogo Oficial Pro</span>
-                            <span class="text-sm text-green-700 font-semibold">R$ 119,90</span>
-                        </div>
+                        <div><span class="font-bold block">Camisa de Jogo Oficial Pro</span><span class="text-sm text-green-700 font-semibold">R$ 119,90</span></div>
                         <select id="item-camisa" class="p-2 border rounded bg-white w-full md:w-48" onchange="recalcularValores()">
                             <option value="">Não quero esta peça</option>
-                            <option value="P">Tamanho P</option>
-                            <option value="M">Tamanho M</option>
-                            <option value="G">Tamanho G</option>
-                            <option value="GG">Tamanho GG</option>
-                            <option value="EXG">Tamanho EXG</option>
+                            <option value="P">Tamanho P</option><option value="M">Tamanho M</option><option value="G">Tamanho G</option><option value="GG">Tamanho GG</option><option value="EXG">Tamanho EXG</option>
                         </select>
                     </div>
 
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-3 bg-gray-50 rounded-lg gap-2">
-                        <div>
-                            <span class="font-bold block">Calção de Jogo Drytex</span>
-                            <span class="text-sm text-green-700 font-semibold">R$ 69,90</span>
-                        </div>
+                        <div><span class="font-bold block">Calção de Jogo Drytex</span><span class="text-sm text-green-700 font-semibold">R$ 69,90</span></div>
                         <select id="item-calcao" class="p-2 border rounded bg-white w-full md:w-48" onchange="recalcularValores()">
                             <option value="">Não quero esta peça</option>
-                            <option value="P">Tamanho P</option>
-                            <option value="M">Tamanho M</option>
-                            <option value="G">Tamanho G</option>
-                            <option value="GG">Tamanho GG</option>
+                            <option value="P">Tamanho P</option><option value="M">Tamanho M</option><option value="G">Tamanho G</option><option value="GG">Tamanho GG</option>
                         </select>
                     </div>
 
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-3 bg-gray-50 rounded-lg gap-2">
-                        <div>
-                            <span class="font-bold block">Meião Oficial (Kit Duo)</span>
-                            <span class="text-sm text-green-700 font-semibold">R$ 49,90</span>
-                        </div>
+                        <div><span class="font-bold block">Meião Oficial (Kit Duo)</span><span class="text-sm text-green-700 font-semibold">R$ 49,90</span></div>
                         <select id="item-meiao" class="p-2 border rounded bg-white w-full md:w-48" onchange="recalcularValores()">
                             <option value="">Não quero esta peça</option>
                             <option value="Kit Duo">Kit Duo (2 Pares)</option>
@@ -93,83 +77,55 @@
                     </div>
 
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-3 bg-gray-50 rounded-lg gap-2">
-                        <div>
-                            <span class="font-bold block">Camisa Polo Viagem / Passeio</span>
-                            <span class="text-sm text-green-700 font-semibold">R$ 106,15</span>
-                        </div>
+                        <div><span class="font-bold block">Camisa Polo Viagem / Passeio</span><span class="text-sm text-green-700 font-semibold">R$ 106,15</span></div>
                         <select id="item-polo" class="p-2 border rounded bg-white w-full md:w-48" onchange="recalcularValores()">
                             <option value="">Não quero esta peça</option>
-                            <option value="P">Tamanho P</option>
-                            <option value="M">Tamanho M</option>
-                            <option value="G">Tamanho G</option>
-                            <option value="GG">Tamanho GG</option>
+                            <option value="P">Tamanho P</option><option value="M">Tamanho M</option><option value="G">Tamanho G</option><option value="GG">Tamanho GG</option>
                         </select>
                     </div>
 
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-3 bg-gray-50 rounded-lg gap-2">
-                        <div>
-                            <span class="font-bold block">Bermuda Moletom Viagem</span>
-                            <span class="text-sm text-green-700 font-semibold">R$ 87,40</span>
-                        </div>
+                        <div><span class="font-bold block">Bermuda Moletom Viagem</span><span class="text-sm text-green-700 font-semibold">R$ 87,40</span></div>
                         <select id="item-bermuda" class="p-2 border rounded bg-white w-full md:w-48" onchange="recalcularValores()">
                             <option value="">Não quero esta peça</option>
-                            <option value="P">Tamanho P</option>
-                            <option value="M">Tamanho M</option>
-                            <option value="G">Tamanho G</option>
-                            <option value="GG">Tamanho GG</option>
+                            <option value="P">Tamanho P</option><option value="M">Tamanho M</option><option value="G">Tamanho G</option><option value="GG">Tamanho GG</option>
                         </select>
                     </div>
 
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-3 bg-gray-50 rounded-lg gap-2">
-                        <div>
-                            <span class="font-bold block">Jaqueta Thermo de Agasalho</span>
-                            <span class="text-sm text-green-700 font-semibold">R$ 149,90</span>
-                        </div>
+                        <div><span class="font-bold block">Jaqueta Thermo de Agasalho</span><span class="text-sm text-green-700 font-semibold">R$ 149,90</span></div>
                         <select id="item-jaqueta" class="p-2 border rounded bg-white w-full md:w-48" onchange="recalcularValores()">
                             <option value="">Não quero esta peça</option>
-                            <option value="P">Tamanho P</option>
-                            <option value="M">Tamanho M</option>
-                            <option value="G">Tamanho G</option>
-                            <option value="GG">Tamanho GG</option>
+                            <option value="P">Tamanho P</option><option value="M">Tamanho M</option><option value="G">Tamanho G</option><option value="GG">Tamanho GG</option>
                         </select>
                     </div>
 
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-3 bg-gray-50 rounded-lg gap-2">
-                        <div>
-                            <span class="font-bold block">Calça Thermo de Agasalho</span>
-                            <span class="text-sm text-green-700 font-semibold">R$ 93,60</span>
-                        </div>
+                        <div><span class="font-bold block">Calça Thermo de Agasalho</span><span class="text-sm text-green-700 font-semibold">R$ 93,60</span></div>
                         <select id="item-calca" class="p-2 border rounded bg-white w-full md:w-48" onchange="recalcularValores()">
                             <option value="">Não quero esta peça</option>
-                            <option value="P">Tamanho P</option>
-                            <option value="M">Tamanho M</option>
-                            <option value="G">Tamanho G</option>
-                            <option value="GG">Tamanho GG</option>
+                            <option value="P">Tamanho P</option><option value="M">Tamanho M</option><option value="G">Tamanho G</option><option value="GG">Tamanho GG</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="mt-4">
                     <label class="block text-sm font-semibold mb-1 text-gray-600">Observações Extras do Pedido:</label>
-                    <textarea id="pedido-obs" rows="2" placeholder="Ex: Ajustar o comprimento, observações sobre numeração ou nome de torcedor..." 
+                    <textarea id="pedido-obs" rows="2" placeholder="Ex: Nome de torcedor nas costas, observações sobre meião..." 
                               class="w-full p-2 border border-gray-300 rounded bg-white text-sm focus:outline-none focus:border-red-700"></textarea>
                 </div>
             </div>
 
             <div class="bg-gray-900 text-white p-6 rounded-xl shadow-md">
                 <h3 class="text-lg font-bold border-b border-gray-700 pb-2 mb-4 text-gray-300">💰 Resumo do Pedido e Parcelas</h3>
-                
                 <div class="flex justify-between items-center mb-4">
                     <span class="text-xl">Valor Total das Peças:</span>
                     <span id="txt-total-loja" class="text-2xl font-black text-green-400">R$ 0,00</span>
                 </div>
-
                 <div class="bg-gray-800 p-4 rounded-lg space-y-2 text-sm">
                     <p class="font-semibold text-gray-400 uppercase tracking-wider text-xs">Simulação de Parcelamento Sugerido:</p>
-                    <div id="box-simulacao-parcelas" class="space-y-1">
-                        </div>
+                    <div id="box-simulacao-parcelas" class="space-y-1"></div>
                 </div>
-
                 <div class="mt-6">
                     <button onclick="salvarPedido()" class="w-full bg-green-600 hover:bg-green-700 text-white font-black py-4 rounded-xl text-lg tracking-wide transition duration-200 shadow-md">
                         Confirmar e Salvar Meu Pedido 🛒
@@ -181,27 +137,14 @@
     </div>
 
     <script>
-        // CONFIGURAÇÕES DO BANCO DE DADOS RELACIONAL (SUPABASE)
         const SUPABASE_URL = "https://bgamzycxlzkhztlzcoqm.supabase.co";
         const SUPABASE_KEY = "sb_publishable_TCo5-FGboWJciGMj3A5jnw_Z6FXiihd";
         
-        // Inicializa o cliente Supabase conectado na nuvem de São Paulo
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Preços fixados do KFC
-        const TABELA_PRECOS = {
-            camisa: 119.90,
-            calcao: 69.90,
-            meiao: 49.90,
-            polo: 106.15,
-            bermuda: 87.40,
-            jaqueta: 149.90,
-            calca: 93.60
-        };
-
+        const TABELA_PRECOS = { camisa: 119.90, calcao: 69.90, meiao: 49.90, polo: 106.15, bermuda: 87.40, jaqueta: 149.90, calca: 93.60 };
         let atletaLogado = null;
 
-        // 1. FLUXO DE LOGIN REAL
         async function efetuarLogin() {
             const bdate = document.getElementById("birthdate-input").value.trim();
             const err = document.getElementById("login-error");
@@ -210,38 +153,35 @@
             if (!bdate) return;
 
             try {
-                // Consulta na tabela 'atletas' mapeando a senha de nascimento
+                // CONSULTA ADAPTADA AS COLUNAS REAIS DA PLANILHA DO KFC
                 const { data, error } = await supabaseClient
                     .from("atletas")
                     .select("*")
-                    .eq("nascimento", bdate);
+                    .eq("NASCIMENTO_ATLETA", bdate);
 
                 if (error) throw error;
 
                 if (data && data.length > 0) {
                     atletaLogado = data[0];
-                    err.classList.add("hidden");
                     
-                    // Transiciona de tela
                     document.getElementById("login-view").classList.add("hidden");
                     document.getElementById("store-view").classList.remove("hidden");
                     
-                    // Renderiza o perfil do jogador
-                    document.getElementById("player-name").innerText = atletaLogado.nome;
-                    document.getElementById("player-number").innerText = atletaLogado.numero_camisa;
+                    // Renderiza puxando as chaves oficiais da planilha
+                    document.getElementById("player-name").innerText = atletaLogado.ATL_Nome_de_Guerra || "Jogador";
+                    document.getElementById("player-number").innerText = atletaLogado["#_CAMISA"] || "--";
+                    document.getElementById("player-since").innerText = atletaLogado.ATL_KFC_DESDE || "Nova Contratação";
 
-                    // Busca se ele já tinha escolhas anteriores salvas
                     await carregarPedidoAnterior(atletaLogado.id);
                 } else {
                     err.classList.remove("hidden");
                 }
             } catch (e) {
-                console.error("Erro no login:", e);
-                alert("Falha na conexão com o banco de dados. Verifique suas credenciais.");
+                console.error(e);
+                alert("Erro ao conectar com o banco de dados.");
             }
         }
 
-        // 2. BUSCA SE O ATLETA JÁ TINHA ESCOLHAS GRAVADAS
         async function carregarPedidoAnterior(atletaId) {
             try {
                 const { data, error } = await supabaseClient
@@ -253,7 +193,6 @@
                 if (error) throw error;
 
                 if (data) {
-                    // Preenche os selects com os tamanhos que o atleta escolheu anteriormente
                     if (data.camisa_jogo) document.getElementById("item-camisa").value = data.camisa_jogo;
                     if (data.calcao_jogo) document.getElementById("item-calcao").value = data.calcao_jogo;
                     if (data.meiao_jogo) document.getElementById("item-meiao").value = data.meiao_jogo;
@@ -265,14 +204,12 @@
                 }
                 recalcularValores();
             } catch (e) {
-                console.error("Erro ao puxar fardamento:", e);
+                console.error(e);
             }
         }
 
-        // 3. RECÁLCULO DINÂMICO DE VALORES E PARCELAS
         function recalcularValores() {
             let total = 0;
-
             if (document.getElementById("item-camisa").value) total += TABELA_PRECOS.camisa;
             if (document.getElementById("item-calcao").value) total += TABELA_PRECOS.calcao;
             if (document.getElementById("item-meiao").value)  total += TABELA_PRECOS.meiao;
@@ -281,14 +218,11 @@
             if (document.getElementById("item-jaqueta").value) total += TABELA_PRECOS.jaqueta;
             if (document.getElementById("item-calca").value)   total += TABELA_PRECOS.calca;
 
-            // Atualiza preço na tela
             document.getElementById("txt-total-loja").innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
 
-            // Determina a flexibilidade de parcelas baseada no kit do atleta
             let maxParcelas = 1;
-            if (total > 300) maxParcelas = 4;      // Kit completo/robusto permite até 4 vezes
-            else if (total > 150) maxParcelas = 2; // Kits intermediários em até 2x
-            else maxParcelas = 1;                  // Valores muito baixos em 1x integral
+            if (total > 300) maxParcelas = 4;
+            else if (total > 150) maxParcelas = 2;
 
             const boxParcelas = document.getElementById("box-simulacao-parcelas");
             boxParcelas.innerHTML = "";
@@ -298,7 +232,6 @@
                 return;
             }
 
-            // Renderiza as opções de parcelamento diferenciado
             for (let i = 1; i <= maxParcelas; i++) {
                 let valorParcela = total / i;
                 let desc = i === 1 ? "À vista integral" : `Em até ${i}x sem juros`;
@@ -310,14 +243,11 @@
             }
         }
 
-        // 4. GRAVAÇÃO DAS ESCOLHAS DIRETAMENTE NO BANCO RELACIONAL
         async function salvarPedido() {
             if (!atletaLogado) return;
-
             const boxSuccess = document.getElementById("save-success");
             boxSuccess.classList.add("hidden");
 
-            // Coleta as escolhas do formulário da loja
             const payload = {
                 atleta_id: atletaLogado.id,
                 camisa_jogo: document.getElementById("item-camisa").value || null,
@@ -332,23 +262,19 @@
             };
 
             try {
-                // Executa um comando UPSERT (Se já existir registro do atleta atualiza, se não cria um novo)
                 const { error } = await supabaseClient
                     .from("pedidos_fardamento")
                     .upsert(payload, { onConflict: 'atleta_id' });
 
                 if (error) throw error;
-
-                // Mostra feedback de gravação concluída
                 boxSuccess.classList.remove("hidden");
                 setTimeout(() => boxSuccess.classList.add("hidden"), 4000);
             } catch (e) {
-                console.error("Erro ao salvar pedido:", e);
-                alert("Ocorreu um erro ao salvar o pedido. Tente novamente.");
+                console.error(e);
+                alert("Erro ao salvar o pedido.");
             }
         }
 
-        // 5. SAÍDA DE SEGURANÇA
         function logout() {
             atletaLogado = null;
             document.getElementById("birthdate-input").value = "";
