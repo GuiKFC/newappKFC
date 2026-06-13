@@ -4,10 +4,13 @@ import { useState } from 'react'
 import styles from './atleta.module.css'
 
 export default function AtletaLogin() {
+  const VERSAO_PAGE = "v1.1.3" // Versão fixa do Front-end
+  
   const [dataNascimento, setDataNascimento] = useState('')
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
   const [atleta, setAtleta] = useState(null)
+  const [versaoApi, setVersaoApi] = useState('v1.1.3') // Deixamos o padrão esperado, mas ela atualiza dinamicamente
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -16,7 +19,6 @@ export default function AtletaLogin() {
     setAtleta(null)
 
     try {
-      // 🚨 Chamando com a URL absoluta da Vercel para matar o erro de JSON
       const response = await fetch('https://newapp-kfc.vercel.app/api/atleta/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -24,6 +26,11 @@ export default function AtletaLogin() {
       })
 
       const dados = await response.json()
+
+      // Sempre que a API responder (com erro ou sucesso), capturamos a versão real dela
+      if (dados.versionApi) {
+        setVersaoApi(dados.versionApi)
+      }
 
       if (!response.ok) {
         throw new Error(dados.error || 'Erro ao buscar atleta.')
@@ -93,8 +100,10 @@ export default function AtletaLogin() {
         </div>
       </main>
 
+      {/* Rodapé exibindo as duas versões SEMPRE juntas */}
       <footer className={styles.footer}>
-        <p>© KFC 2026 (v1.1.0) - Todos os direitos reservados</p>
+        <p>© KFC 2026 | Page: {VERSAO_PAGE} | Route API: {versaoApi}</p>
+        <p style={{ fontSize: '11px', marginTop: '4px', color: '#444' }}>Todos os direitos reservados</p>
       </footer>
 
     </div>
