@@ -4,13 +4,13 @@ import { useState } from 'react'
 import styles from './atleta.module.css'
 
 export default function AtletaLogin() {
-  const VERSAO_PAGE = "v1.1.3" // Versão fixa do Front-end
+  const VERSAO_PAGE = "v1.1.5" // 👈 Travado na v1.1.5
   
   const [dataNascimento, setDataNascimento] = useState('')
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
   const [atleta, setAtleta] = useState(null)
-  const [versaoApi, setVersaoApi] = useState('v1.1.3') // Deixamos o padrão esperado, mas ela atualiza dinamicamente
+  const [versaoApi, setVersaoApi] = useState('v1.1.5') // 👈 Travado na v1.1.5
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -27,7 +27,6 @@ export default function AtletaLogin() {
 
       const dados = await response.json()
 
-      // Sempre que a API responder (com erro ou sucesso), capturamos a versão real dela
       if (dados.versionApi) {
         setVersaoApi(dados.versionApi)
       }
@@ -100,7 +99,6 @@ export default function AtletaLogin() {
         </div>
       </main>
 
-      {/* Rodapé exibindo as duas versões SEMPRE juntas */}
       <footer className={styles.footer}>
         <p>© KFC 2026 | Page: {VERSAO_PAGE} | Route API: {versaoApi}</p>
         <p style={{ fontSize: '11px', marginTop: '4px', color: '#444' }}>Todos os direitos reservados</p>

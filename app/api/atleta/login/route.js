@@ -5,8 +5,7 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export async function POST(request) {
-  // Guardamos a versão da API em uma constante para fácil manutenção
-  const VERSION_API = "v1.1.3"
+  const VERSION_API = "v1.1.5" // 👈 Sincronizado na v1.1.5
 
   try {
     const { dataNascimento } = await request.json()
@@ -31,29 +30,25 @@ export async function POST(request) {
     const mes = digitos.substring(2, 4)
     const ano = digitos.substring(4, 8)
 
-    const padraoExatoBanco = `${ano}-${mes}-${dia}`       // "1983-08-11"
-    const padraoInvertidoBanco = `${ano}-${dia}-${mes}`   // "1983-11-08"
+    // Formato exato do banco que você validou no print: YYYY-MM-DD
+    const formatoBanco = `${ano}-${mes}-${dia}` 
 
+    // Busca direta e ultra veloz usando correspondência exata
     const { data: atletas, error } = await supabase
       .from('atletas')
       .select('*')
+      .eq('data_nascimento', formatoBanco)
 
-    if (error || !atletas) {
-      return new Response(JSON.stringify({ error: 'Erro ao conectar no banco de dados.', versionApi: VERSION_API }), { 
+    if (error) {
+      return new Response(JSON.stringify({ error: `Erro no banco: ${error.message}`, versionApi: VERSION_API }), { 
         status: 500,
         headers: { 'Content-Type': 'application/json' }
       })
     }
 
-    const atletaEncontrado = atletas.find(atleta => {
-      if (!atleta.data_nascimento) return false
-      const dataAtletaTexto = atleta.data_nascimento.toString()
-      return dataAtletaTexto.includes(padraoExatoBanco) || dataAtletaTexto.includes(padraoInvertidoBanco)
-    })
-
-    if (!atletaEncontrado) {
+    if (!atletas || atletas.length === 0) {
       return new Response(JSON.stringify({ 
-        error: `Atleta não encontrado para a data: ${padraoExatoBanco}`, 
+        error: `Nenhum registro retornado para a data ${formatoBanco}. Verifique a policy RLS no Supabase.`, 
         versionApi: VERSION_API 
       }), { 
         status: 404,
@@ -61,10 +56,9 @@ export async function POST(request) {
       })
     }
 
-    // Injeta a versão da API junto com os dados do atleta encontrado
-    const respostaSucesso = { ...atletaEncontrado, versionApi: VERSION_API }
+    const atletaEncontrado = atletas[0]
 
-    return new Response(JSON.stringify(respostaSucesso), {
+    return new Response(JSON.stringify({ ...atletaEncontrado, versionApi: VERSION_API }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     })
