@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import styles from './atleta.module.css' // 👈 Importando o CSS separado!
+import styles from './atleta.module.css'
 
 export default function AtletaLogin() {
   const [dataNascimento, setDataNascimento] = useState('')
@@ -16,7 +16,8 @@ export default function AtletaLogin() {
     setAtleta(null)
 
     try {
-      const response = await fetch('/api/atleta/login', {
+      // 🚨 Chamando com a URL absoluta da Vercel para matar o erro de JSON
+      const response = await fetch('https://newapp-kfc.vercel.app/api/atleta/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ dataNascimento })
@@ -93,7 +94,7 @@ export default function AtletaLogin() {
       </main>
 
       <footer className={styles.footer}>
-        <p>© KFC 2026 (v1.0.8) - Todos os direitos reservados</p>
+        <p>© KFC 2026 (v1.0.9) - Todos os direitos reservados</p>
       </footer>
 
     </div>
