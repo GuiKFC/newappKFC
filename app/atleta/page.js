@@ -4,13 +4,13 @@ import { useState } from 'react'
 import styles from './atleta.module.css'
 
 export default function AtletaLogin() {
-  const VERSAO_PAGE = "v1.1.5" // 👈 Travado na v1.1.5
+  const VERSAO_PAGE = "v1.2.0"
   
   const [dataNascimento, setDataNascimento] = useState('')
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
   const [atleta, setAtleta] = useState(null)
-  const [versaoApi, setVersaoApi] = useState('v1.1.5') // 👈 Travado na v1.1.5
+  const [versaoApi, setVersaoApi] = useState('v1.2.0')
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -32,7 +32,7 @@ export default function AtletaLogin() {
       }
 
       if (!response.ok) {
-        throw new Error(dados.error || 'Erro ao buscar atleta.')
+        throw new Error(dados.error || 'Erro ao processar login.')
       }
 
       setAtleta(dados)
@@ -45,10 +45,8 @@ export default function AtletaLogin() {
 
   return (
     <div className={styles.container}>
-      
       <main className={styles.main}>
         <div className={styles.card}>
-          
           <div className={styles.header}>
              <h1 className={styles.title}>Portal do Atleta</h1>
              <p className={styles.subtitle}>Acesse seu extrato e informações</p>
@@ -89,6 +87,7 @@ export default function AtletaLogin() {
               <div className={styles.infoBox}>
                 <p><strong>Status:</strong> Atleta Ativo</p>
                 <p><strong>ID:</strong> {atleta.id}</p>
+                <p><strong>Número da Camisa:</strong> {atleta.numero || 'Não informada'}</p>
               </div>
 
               <button onClick={() => setAtleta(null)} className={styles.logoutButton}>
@@ -103,7 +102,6 @@ export default function AtletaLogin() {
         <p>© KFC 2026 | Page: {VERSAO_PAGE} | Route API: {versaoApi}</p>
         <p style={{ fontSize: '11px', marginTop: '4px', color: '#444' }}>Todos os direitos reservados</p>
       </footer>
-
     </div>
   )
 }
