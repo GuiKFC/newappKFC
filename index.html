@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KFC - Loja Virtual de Uniformes</title>
+    <title>KFC - Loja & Gestão de Uniformes 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .bg-kfc { background-color: #8B0000; }
         .text-kfc { color: #8B0000; }
@@ -13,17 +12,17 @@
         .hover-kfc:hover { background-color: #A31A1A; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen">
+<body class="bg-gray-50 text-gray-800 min-h-screen p-4">
 
-    <div class="max-w-4xl mx-auto p-4">
+    <div class="max-w-4xl mx-auto">
         <header class="bg-kfc text-white p-6 rounded-xl shadow-lg text-center mb-6">
             <h1 class="text-2xl font-bold tracking-wider">KIOSKE FUTEBOL CLUBE</h1>
-            <p class="text-sm opacity-90 mt-1">Campanha Oficial de Uniformes e Agasalhos 2026</p>
+            <p class="text-sm opacity-90 mt-1">Painel Oficial de Uniformes, Agasalhos e Finanças 2026</p>
         </header>
 
-        <div id="login-view" class="bg-white p-6 rounded-xl shadow-md max-w-md mx-auto text-center">
-            <h2 class="text-xl font-bold mb-4">Acesso do Atleta</h2>
-            <p class="text-sm text-gray-500 mb-6">Insira sua data de nascimento cadastrada para acessar a loja e montar seu kit.</p>
+        <div id="login-view" class="bg-white p-6 rounded-xl shadow-md max-w-md mx-auto text-center my-12">
+            <h2 class="text-xl font-bold mb-4">Acesso ao Sistema</h2>
+            <p class="text-sm text-gray-500 mb-6">Insira a sua data de nascimento (ou senha ADM) para aceder ao painel de fardamentos.</p>
             
             <div class="mb-4 text-left">
                 <label class="block text-sm font-semibold mb-2">Sua Senha (DD/MM/AAAA):</label>
@@ -32,255 +31,83 @@
             </div>
             
             <button onclick="efetuarLogin()" class="w-full bg-kfc hover-kfc text-white font-bold py-3 rounded-lg transition duration-200">
-                Entrar na Loja ⚽
+                Entrar no Painel ⚽
             </button>
-            <p id="login-error" class="text-red-600 font-semibold mt-4 hidden">Atleta não localizado. Verifique a formatação (DD/MM/AAAA).</p>
+            <p id="login-error" class="text-red-600 font-semibold mt-4 hidden">Acesso não localizado. Use o formato DD/MM/AAAA ou o acesso ADM.</p>
         </div>
 
-        <div id="store-view" class="hidden space-y-6">
-            <div class="bg-white p-6 rounded-xl shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
+        <div id="athlete-view" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-md flex justify-between items-center">
                 <div>
-                    <h2 class="text-xl font-bold">Fala, <span id="player-name" class="text-kfc">Jogador</span>! 👋</h2>
+                    <h2 class="text-xl font-bold">Fala, <span id="player-name" class="text-kfc">Atleta</span>! 👋</h2>
                     <p class="text-sm text-gray-500 mt-1">Camisa Oficial: <span id="player-number" class="font-bold text-gray-800">--</span> | No KFC desde: <span id="player-since" class="font-bold text-gray-800">--</span></p>
                 </div>
-                <button onclick="logout()" class="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-700">
-                    Sair do Sistema
-                </button>
+                <button onclick="logout()" class="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-700">Sair</button>
             </div>
 
             <div class="bg-white p-6 rounded-xl shadow-md">
-                <h3 class="text-lg font-bold border-b pb-3 mb-4 text-gray-700">🛍️ Monte seu Carrinho / Escolha os Tamanhos</h3>
-                
-                <div class="space-y-4">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-3 bg-gray-50 rounded-lg gap-2">
-                        <div><span class="font-bold block">Camisa de Jogo Oficial Pro</span><span class="text-sm text-green-700 font-semibold">R$ 119,90</span></div>
-                        <select id="item-camisa" class="p-2 border rounded bg-white w-full md:w-48" onchange="recalcularValores()">
-                            <option value="">Não quero esta peça</option>
-                            <option value="P">Tamanho P</option><option value="M">Tamanho M</option><option value="G">Tamanho G</option><option value="GG">Tamanho GG</option><option value="EXG">Tamanho EXG</option>
-                        </select>
-                    </div>
-
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-3 bg-gray-50 rounded-lg gap-2">
-                        <div><span class="font-bold block">Calção de Jogo Drytex</span><span class="text-sm text-green-700 font-semibold">R$ 69,90</span></div>
-                        <select id="item-calcao" class="p-2 border rounded bg-white w-full md:w-48" onchange="recalcularValores()">
-                            <option value="">Não quero esta peça</option>
-                            <option value="P">Tamanho P</option><option value="M">Tamanho M</option><option value="G">Tamanho G</option><option value="GG">Tamanho GG</option>
-                        </select>
-                    </div>
-
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-3 bg-gray-50 rounded-lg gap-2">
-                        <div><span class="font-bold block">Meião Oficial (Kit Duo)</span><span class="text-sm text-green-700 font-semibold">R$ 49,90</span></div>
-                        <select id="item-meiao" class="p-2 border rounded bg-white w-full md:w-48" onchange="recalcularValores()">
-                            <option value="">Não quero esta peça</option>
-                            <option value="Kit Duo">Kit Duo (2 Pares)</option>
-                        </select>
-                    </div>
-
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-3 bg-gray-50 rounded-lg gap-2">
-                        <div><span class="font-bold block">Camisa Polo Viagem / Passeio</span><span class="text-sm text-green-700 font-semibold">R$ 106,15</span></div>
-                        <select id="item-polo" class="p-2 border rounded bg-white w-full md:w-48" onchange="recalcularValores()">
-                            <option value="">Não quero esta peça</option>
-                            <option value="P">Tamanho P</option><option value="M">Tamanho M</option><option value="G">Tamanho G</option><option value="GG">Tamanho GG</option>
-                        </select>
-                    </div>
-
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-3 bg-gray-50 rounded-lg gap-2">
-                        <div><span class="font-bold block">Bermuda Moletom Viagem</span><span class="text-sm text-green-700 font-semibold">R$ 87,40</span></div>
-                        <select id="item-bermuda" class="p-2 border rounded bg-white w-full md:w-48" onchange="recalcularValores()">
-                            <option value="">Não quero esta peça</option>
-                            <option value="P">Tamanho P</option><option value="M">Tamanho M</option><option value="G">Tamanho G</option><option value="GG">Tamanho GG</option>
-                        </select>
-                    </div>
-
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-3 bg-gray-50 rounded-lg gap-2">
-                        <div><span class="font-bold block">Jaqueta Thermo de Agasalho</span><span class="text-sm text-green-700 font-semibold">R$ 149,90</span></div>
-                        <select id="item-jaqueta" class="p-2 border rounded bg-white w-full md:w-48" onchange="recalcularValores()">
-                            <option value="">Não quero esta peça</option>
-                            <option value="P">Tamanho P</option><option value="M">Tamanho M</option><option value="G">Tamanho G</option><option value="GG">Tamanho GG</option>
-                        </select>
-                    </div>
-
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-3 bg-gray-50 rounded-lg gap-2">
-                        <div><span class="font-bold block">Calça Thermo de Agasalho</span><span class="text-sm text-green-700 font-semibold">R$ 93,60</span></div>
-                        <select id="item-calca" class="p-2 border rounded bg-white w-full md:w-48" onchange="recalcularValores()">
-                            <option value="">Não quero esta peça</option>
-                            <option value="P">Tamanho P</option><option value="M">Tamanho M</option><option value="G">Tamanho G</option><option value="GG">Tamanho GG</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="mt-4">
-                    <label class="block text-sm font-semibold mb-1 text-gray-600">Observações Extras do Pedido:</label>
-                    <textarea id="pedido-obs" rows="2" placeholder="Ex: Nome de torcedor nas costas, observações sobre meião..." 
-                              class="w-full p-2 border border-gray-300 rounded bg-white text-sm focus:outline-none focus:border-red-700"></textarea>
-                </div>
+                <h3 class="text-lg font-bold border-b pb-2 mb-4 text-gray-700">📋 Suas Peças Selecionadas (Lote Fábrica)</h3>
+                <ul id="athlete-items-list" class="space-y-2 list-disc list-inside text-gray-600 font-medium"></ul>
             </div>
 
             <div class="bg-gray-900 text-white p-6 rounded-xl shadow-md">
-                <h3 class="text-lg font-bold border-b border-gray-700 pb-2 mb-4 text-gray-300">💰 Resumo do Pedido e Parcelas</h3>
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-xl">Valor Total das Peças:</span>
-                    <span id="txt-total-loja" class="text-2xl font-black text-green-400">R$ 0,00</span>
+                <h3 class="text-lg font-bold border-b border-gray-700 pb-2 mb-4 text-gray-300">💰 Extrato Financeiro Individual</h3>
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between border-b border-gray-800 py-2">
+                        <span>Valor Total das Peças:</span>
+                        <span id="ath-total" class="font-bold text-lg text-white">R$ 0,00</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b border-gray-800 py-2">
+                        <span>Sinal (50% Obrigatório para Fabricação):</span>
+                        <div class="flex items-center gap-2">
+                            <span id="ath-sinal" class="font-bold text-orange-400">R$ 0,00</span>
+                            <span id="badge-sinal" class="px-2 py-0.5 text-xs font-black rounded"></span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center py-2">
+                        <span>Entrega (50% Restante no Recebimento):</span>
+                        <div class="flex items-center gap-2">
+                            <span id="ath-entrega" class="font-bold text-red-400">R$ 0,00</span>
+                            <span id="badge-entrega" class="px-2 py-0.5 text-xs font-black rounded"></span>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-gray-800 p-4 rounded-lg space-y-2 text-sm">
-                    <p class="font-semibold text-gray-400 uppercase tracking-wider text-xs">Simulação de Parcelamento Sugerido:</p>
-                    <div id="box-simulacao-parcelas" class="space-y-1"></div>
-                </div>
-                <div class="mt-6">
-                    <button onclick="salvarPedido()" class="w-full bg-green-600 hover:bg-green-700 text-white font-black py-4 rounded-xl text-lg tracking-wide transition duration-200 shadow-md">
-                        Confirmar e Salvar Meu Pedido 🛒
-                    </button>
-                    <p id="save-success" class="text-center text-green-400 font-bold mt-3 hidden">✓ Pedido gravado com sucesso no Supabase!</p>
+                <div class="mt-6 p-4 bg-gray-800 border border-dashed border-green-600 rounded-lg text-center">
+                    <p class="text-green-400 font-bold text-xs uppercase tracking-wider">Chave PIX Oficial de Arrecadação:</p>
+                    <p class="text-lg font-mono font-bold text-white my-1">financeiro@kfc2026.com</p>
+                    <p class="text-gray-400 text-xs">Envie o comprovante para a diretoria do clube para dar baixa no seu status.</p>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        const SUPABASE_URL = "https://bgamzycxlzkhztlzcoqm.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_TCo5-FGboWJciGMj3A5jnw_Z6FXiihd";
-        
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        <div id="admin-view" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-md flex justify-between items-center border-b-4 border-red-800">
+                <div>
+                    <h2 class="text-xl font-bold text-kfc">Painel de Controle da Diretoria (KFC)</h2>
+                    <p class="text-xs text-gray-500">Monitoramento global de caixa, tamanhos e inadimplência</p>
+                </div>
+                <button onclick="logout()" class="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-700">Sair do ADM</button>
+            </div>
 
-        const TABELA_PRECOS = { camisa: 119.90, calcao: 69.90, meiao: 49.90, polo: 106.15, bermuda: 87.40, jaqueta: 149.90, calca: 93.60 };
-        let atletaLogado = null;
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-xl shadow-md border-l-4 border-blue-600">
+                    <span class="text-xs font-bold text-gray-400 uppercase">Custo Total do Lote (Fábrica)</span>
+                    <h3 class="text-xl font-black text-gray-800 mt-1">R$ 9.169,70</h3>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-md border-l-4 border-green-600">
+                    <span class="text-xs font-bold text-gray-400 uppercase">Meta Sinal Solicitado (50%)</span>
+                    <h3 class="text-xl font-black text-green-700 mt-1">R$ 4.584,85</h3>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-md border-l-4 border-orange-500">
+                    <span class="text-xs font-bold text-gray-400 uppercase">Status Pedido Mínimo</span>
+                    <h3 class="text-md font-bold text-orange-700 mt-2">📊 Jogos & Agasalhos LIBERADOS</h3>
+                </div>
+            </div>
 
-        async function efetuarLogin() {
-            const bdate = document.getElementById("birthdate-input").value.trim();
-            const err = document.getElementById("login-error");
-            err.classList.add("hidden");
-
-            if (!bdate) return;
-
-            try {
-                // CONSULTA ADAPTADA AS COLUNAS REAIS DA PLANILHA DO KFC
-                const { data, error } = await supabaseClient
-                    .from("atletas")
-                    .select("*")
-                    .eq("NASCIMENTO_ATLETA", bdate);
-
-                if (error) throw error;
-
-                if (data && data.length > 0) {
-                    atletaLogado = data[0];
-                    
-                    document.getElementById("login-view").classList.add("hidden");
-                    document.getElementById("store-view").classList.remove("hidden");
-                    
-                    // Renderiza puxando as chaves oficiais da planilha
-                    document.getElementById("player-name").innerText = atletaLogado.ATL_Nome_de_Guerra || "Jogador";
-                    document.getElementById("player-number").innerText = atletaLogado["#_CAMISA"] || "--";
-                    document.getElementById("player-since").innerText = atletaLogado.ATL_KFC_DESDE || "Nova Contratação";
-
-                    await carregarPedidoAnterior(atletaLogado.id);
-                } else {
-                    err.classList.remove("hidden");
-                }
-            } catch (e) {
-                console.error(e);
-                alert("Erro ao conectar com o banco de dados.");
-            }
-        }
-
-        async function carregarPedidoAnterior(atletaId) {
-            try {
-                const { data, error } = await supabaseClient
-                    .from("pedidos_fardamento")
-                    .select("*")
-                    .eq("atleta_id", atletaId)
-                    .maybeSingle();
-
-                if (error) throw error;
-
-                if (data) {
-                    if (data.camisa_jogo) document.getElementById("item-camisa").value = data.camisa_jogo;
-                    if (data.calcao_jogo) document.getElementById("item-calcao").value = data.calcao_jogo;
-                    if (data.meiao_jogo) document.getElementById("item-meiao").value = data.meiao_jogo;
-                    if (data.polo_passeio) document.getElementById("item-polo").value = data.polo_passeio;
-                    if (data.bermuda_passeio) document.getElementById("item-bermuda").value = data.bermuda_passeio;
-                    if (data.jaqueta_agasalho) document.getElementById("item-jaqueta").value = data.jaqueta_agasalho;
-                    if (data.calca_agasalho) document.getElementById("item-calca").value = data.calca_agasalho;
-                    if (data.observacoes) document.getElementById("pedido-obs").value = data.observacoes;
-                }
-                recalcularValores();
-            } catch (e) {
-                console.error(e);
-            }
-        }
-
-        function recalcularValores() {
-            let total = 0;
-            if (document.getElementById("item-camisa").value) total += TABELA_PRECOS.camisa;
-            if (document.getElementById("item-calcao").value) total += TABELA_PRECOS.calcao;
-            if (document.getElementById("item-meiao").value)  total += TABELA_PRECOS.meiao;
-            if (document.getElementById("item-polo").value)   total += TABELA_PRECOS.polo;
-            if (document.getElementById("item-bermuda").value) total += TABELA_PRECOS.bermuda;
-            if (document.getElementById("item-jaqueta").value) total += TABELA_PRECOS.jaqueta;
-            if (document.getElementById("item-calca").value)   total += TABELA_PRECOS.calca;
-
-            document.getElementById("txt-total-loja").innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
-
-            let maxParcelas = 1;
-            if (total > 300) maxParcelas = 4;
-            else if (total > 150) maxParcelas = 2;
-
-            const boxParcelas = document.getElementById("box-simulacao-parcelas");
-            boxParcelas.innerHTML = "";
-
-            if (total === 0) {
-                boxParcelas.innerHTML = "<p class='text-gray-500'>Nenhum item selecionado.</p>";
-                return;
-            }
-
-            for (let i = 1; i <= maxParcelas; i++) {
-                let valorParcela = total / i;
-                let desc = i === 1 ? "À vista integral" : `Em até ${i}x sem juros`;
-                boxParcelas.innerHTML += `
-                    <div class="flex justify-between border-b border-gray-700 py-1 text-gray-300">
-                        <span>${desc}:</span>
-                        <span class="font-mono text-white">${i}x de R$ ${valorParcela.toFixed(2).replace('.', ',')}</span>
-                    </div>`;
-            }
-        }
-
-        async function salvarPedido() {
-            if (!atletaLogado) return;
-            const boxSuccess = document.getElementById("save-success");
-            boxSuccess.classList.add("hidden");
-
-            const payload = {
-                atleta_id: atletaLogado.id,
-                camisa_jogo: document.getElementById("item-camisa").value || null,
-                calcao_jogo: document.getElementById("item-calcao").value || null,
-                meiao_jogo: document.getElementById("item-meiao").value || null,
-                polo_passeio: document.getElementById("item-polo").value || null,
-                bermuda_passeio: document.getElementById("item-bermuda").value || null,
-                jaqueta_agasalho: document.getElementById("item-jaqueta").value || null,
-                calca_agasalho: document.getElementById("item-calca").value || null,
-                observacoes: document.getElementById("pedido-obs").value.trim() || null,
-                atualizado_em: new Date().toISOString()
-            };
-
-            try {
-                const { error } = await supabaseClient
-                    .from("pedidos_fardamento")
-                    .upsert(payload, { onConflict: 'atleta_id' });
-
-                if (error) throw error;
-                boxSuccess.classList.remove("hidden");
-                setTimeout(() => boxSuccess.classList.add("hidden"), 4000);
-            } catch (e) {
-                console.error(e);
-                alert("Erro ao salvar o pedido.");
-            }
-        }
-
-        function logout() {
-            atletaLogado = null;
-            document.getElementById("birthdate-input").value = "";
-            document.getElementById("store-view").classList.add("hidden");
-            document.getElementById("login-view").classList.remove("hidden");
-        }
-    </script>
-</body>
-</html>
+            <div class="bg-white p-6 rounded-xl shadow-md overflow-x-auto">
+                <h3 class="text-lg font-bold text-gray-700 mb-4 border-b pb-2">📋 Listagem Geral e Balanço dos Atletas</h3>
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-gray-800 text-white">
+                            <th class="p-3 rounded-l">Jogador</th>
+                            <th class="p-3">Nº</th>
