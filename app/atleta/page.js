@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import styles from './atleta.module.css' // 👈 Importando o CSS separado!
 
 export default function AtletaLogin() {
   const [dataNascimento, setDataNascimento] = useState('')
@@ -36,68 +37,63 @@ export default function AtletaLogin() {
   }
 
   return (
-    <div style={{
-      display: 'flex', 
-      flexDirection: 'column', 
-      justifyContent: 'between', 
-      minHeight: '100vh', 
-      backgroundColor: '#111', 
-      color: '#fff',
-      fontFamily: 'sans-serif'
-    }}>
+    <div className={styles.container}>
       
-      {/* Conteúdo Principal */}
-      <main style={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-        <div style={{ backgroundColor: '#222', padding: '40px', borderRadius: '12px', width: '100%', maxWidth: '400px', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>
-          <h1 style={{ textAlign: 'center', marginBottom: '24px', color: '#ffcc00' }}>Portal do Atleta</h1>
+      <main className={styles.main}>
+        <div className={styles.card}>
+          
+          <div className={styles.header}>
+             <h1 className={styles.title}>Portal do Atleta</h1>
+             <p className={styles.subtitle}>Acesse seu extrato e informações</p>
+          </div>
           
           {!atleta ? (
-            <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <label htmlFor="data">Digite sua Data de Nascimento:</label>
+            <form onSubmit={handleLogin} className={styles.form}>
+              <div className={styles.inputGroup}>
+                <label className={styles.label}>Data de Nascimento</label>
                 <input
-                  id="data"
                   type="text"
-                  placeholder="Ex: 11/08/1983"
+                  placeholder="DD/MM/AAAA"
                   value={dataNascimento}
                   onChange={(e) => setDataNascimento(e.target.value)}
-                  style={{ padding: '12px', borderRadius: '6px', border: 'none', backgroundColor: '#333', color: '#fff', fontSize: '16px' }}
+                  className={styles.input}
                   required
                 />
               </div>
 
-              <button 
-                type="submit" 
-                disabled={carregando}
-                style={{ padding: '12px', borderRadius: '6px', border: 'none', backgroundColor: '#ffcc00', color: '#000', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', transition: '0.2s' }}
-              >
-                {carregando ? 'Buscando...' : 'Entrar'}
+              <button type="submit" disabled={carregando} className={styles.button}>
+                {carregando ? 'Verificando...' : 'Entrar no Sistema'}
               </button>
 
-              {erro && <p style={{ color: '#ff4444', fontSize: '14px', textAlign: 'center', marginTop: '10px' }}>{erro}</p>}
+              {erro && (
+                <div className={styles.errorBox}>
+                  <p className={styles.errorText}>{erro}</p>
+                </div>
+              )}
             </form>
           ) : (
-            <div style={{ textAlign: 'center' }}>
-              <h2 style={{ color: '#44ff44' }}>Bem-vindo!</h2>
-              <p style={{ fontSize: '20px', margin: '16px 0' }}>{atleta.nome}</p>
-              <div style={{ borderTop: '1px solid #444', paddingTop: '16px', marginTop: '16px', textAlign: 'left' }}>
-                <p><strong>ID do Atleta:</strong> {atleta.id}</p>
-                <p><strong>Cadastro Confirmado!</strong> Data de acesso liberada.</p>
+            <div className={styles.successBox}>
+              <div className={styles.iconCheck}>
+                <span>✓</span>
               </div>
-              <button 
-                onClick={() => setAtleta(null)} 
-                style={{ marginTop: '20px', padding: '8px 16px', borderRadius: '6px', border: 'none', backgroundColor: '#444', color: '#fff', cursor: 'pointer' }}
-              >
-                Sair
+              <h2>Bem-vindo!</h2>
+              <p className={styles.welcomeText}>{atleta.nome}</p>
+              
+              <div className={styles.infoBox}>
+                <p><strong>Status:</strong> Atleta Ativo</p>
+                <p><strong>ID:</strong> {atleta.id}</p>
+              </div>
+
+              <button onClick={() => setAtleta(null)} className={styles.logoutButton}>
+                Sair do Portal
               </button>
             </div>
           )}
         </div>
       </main>
 
-      {/* Rodapé com a versão EXATAMENTE onde você pediu */}
-      <footer style={{ textAlign: 'center', padding: '20px', borderTop: '1px solid #222', fontSize: '14px', color: '#666' }}>
-        <p>© KFC 2026 (v1.0.5) - Todos os direitos reservados</p>
+      <footer className={styles.footer}>
+        <p>© KFC 2026 (v1.0.8) - Todos os direitos reservados</p>
       </footer>
 
     </div>

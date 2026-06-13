@@ -1,0 +1,160 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #0a0a0a;
+  color: #ffffff;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.card {
+  background-color: #1a1a1a;
+  padding: 40px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+  border: 1px solid #333;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.title {
+  color: #ffcc00;
+  font-size: 28px;
+  margin: 0 0 10px 0;
+}
+
+.subtitle {
+  color: #888;
+  font-size: 14px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ccc;
+}
+
+.input {
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background-color: #000;
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+}
+
+.button {
+  padding: 14px;
+  border-radius: 8px;
+  border: none;
+  background-color: #ffcc00;
+  color: #000;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+.errorBox {
+  background-color: rgba(255, 68, 68, 0.1);
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ff4444;
+}
+
+.errorText {
+  color: #ff4444;
+  font-size: 13px;
+  text-align: center;
+  margin: 0;
+}
+
+.successBox {
+  text-align: center;
+}
+
+.iconCheck {
+  width: 60px;
+  height: 60px;
+  background-color: #44ff44;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px auto;
+}
+
+.iconCheck span {
+  color: #000;
+  font-size: 30px;
+}
+
+.welcomeText {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffcc00;
+  margin: 0 0 24px 0;
+}
+
+.infoBox {
+  background-color: #000;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 14px;
+  color: #aaa;
+  border: 1px solid #333;
+}
+
+.infoBox p {
+  margin: 5px 0;
+}
+
+.logoutButton {
+  margin: 24px 0 0 0;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background-color: transparent;
+  color: #888;
+  cursor: pointer;
+}
+
+.footer {
+  text-align: center;
+  padding: 30px;
+  font-size: 13px;
+  color: #555;
+  letter-spacing: '0.5px';
+}
