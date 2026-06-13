@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'KFC 2026',
-  description: 'Sistema de Gestão de Fardamento',
+  description: 'Sistema de Gestão de Fardamento By Gui',
 }
 
 export default function RootLayout({ children }) {
