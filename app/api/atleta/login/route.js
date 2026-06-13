@@ -6,7 +6,7 @@ const supabaseAnonKey = process.env.SUPABASE_ANON_KEY
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export async function POST(request) {
-  const VERSION_API = "v1.2.0"
+  const VERSION_API = "v1.2.1"
 
   try {
     const { dataNascimento } = await request.json()
