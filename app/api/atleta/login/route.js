@@ -1,60 +1,200 @@
-import { createClient } from '@supabase/supabase-js'
+'use client'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { useState } from 'react'
 
-export async function POST(request) {
-  try {
-    const { dataNascimento } = await request.json()
+export default function AtletaLogin() {
+  const [dataNascimento, setDataNascimento] = useState('')
+  const [carregando, setCarregando] = useState(false)
+  const [erro, setErro] = useState('')
+  const [atleta, setAtleta] = useState(null)
 
-    if (!dataNascimento) {
-      return new Response(JSON.stringify({ error: 'Data de nascimento é obrigatória.' }), { status: 400 })
-    }
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    setCarregando(true)
+    setErro('')
+    setAtleta(null)
 
-    // 1. Se a data já vier no formato correto do banco (AAAA-MM-DD), usa ela direto
-    let dataFormatadaBanco = dataNascimento;
+    try {
+      // Faz a chamada para a nossa API blindada (v1.0.6)
+      const response = await fetch('/api/atleta/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dataNascimento })
+      })
 
-    // 2. Se não estiver no formato do banco, vamos tratar o texto
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(dataNascimento)) {
-      const dataLimpa = dataNascimento.replace(/\D/g, '')
+      const dados = await response.json()
 
-      if (dataLimpa.length !== 8) {
-        return new Response(JSON.stringify({ error: 'Formato de data inválido. Use DD/MM/AAAA ou AAAA-MM-DD.' }), { status: 400 })
+      if (!response.ok) {
+        // Se a API retornar erro (tipo Atleta não encontrado), exibe a mensagem detalhada
+        throw new Error(dados.error || 'Erro ao buscar atleta.')
       }
 
-      // Se os 4 primeiros dígitos forem maiores que 1300, a pessoa digitou o ANO primeiro (AAAAMMDD)
-      if (parseInt(dataLimpa.substring(0, 4)) > 1300) {
-        const ano = dataLimpa.substring(0, 4)
-        const mes = dataLimpa.substring(4, 6)
-        const dia = dataLimpa.substring(6, 8)
-        dataFormatadaBanco = `${ano}-${mes}-${dia}`
-      } else {
-        // Se não, digitou o DIA primeiro (DDMMAAAA)
-        const dia = dataLimpa.substring(0, 2)
-        const mes = dataLimpa.substring(2, 4)
-        const ano = dataLimpa.substring(4, 8)
-        dataFormatadaBanco = `${ano}-${mes}-${dia}`
-      }
+      // Se deu certo, salva os dados do atleta no estado para exibir na tela
+      setAtleta(dados)
+    } catch (err) {
+      setErro(err.message)
+    } finally {
+      setCarregando(false)
     }
-
-    // Busca direta no Supabase
-    const { data: atleta, error } = await supabase
-      .from('atletas')
-      .select('*')
-      .eq('data_nascimento', dataFormatadaBanco)
-      .single()
-
-    if (error || !atleta) {
-      return new Response(JSON.stringify({ error: `Atleta não encontrado no Supabase para a data: ${dataFormatadaBanco}` }), { status: 404 })
-    }
-
-    return new Response(JSON.stringify(atleta), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    })
-
-  } catch (err) {
-    return new Response(JSON.stringify({ error: 'Erro interno no servidor.', detalhes: err.message }), { status: 500 })
   }
+
+  return (
+    <div style={{
+      display: 'flex', 
+      flexDirection: 'column', 
+      minHeight: '100vh', 
+      backgroundColor: '#0a0a0a', 
+      color: '#ffffff',
+      fontFamily: 'system-ui, -apple-system, sans-serif'
+    }}>
+      
+      {/* Área Central do Login */}
+      <main style={{ 
+        flex: 1, 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        padding: '20px' 
+      }}>
+        <div style={{ 
+          backgroundColor: '#1a1a1a', 
+          padding: '40px', 
+          borderRadius: '16px', 
+          width: '100%', 
+          maxWidth: '400px', 
+          boxShadow: '0 10px 30px rgba(0,0,0,0.7)',
+          border: '1px solid #333'
+        }}>
+          
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+             <h1 style={{ color: '#ffcc00', fontSize: '28px', margin: '0 0 10px 0' }}>Portal do Atleta</h1>
+             <p style={{ color: '#888', fontSize: '14px' }}>Acesse seu extrato e informações</p>
+          </div>
+          
+          {!atleta ? (
+            <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <label style={{ fontSize: '14px', fontWeight: 'bold', color: '#ccc' }}>
+                  Data de Nascimento
+                </label>
+                <input
+                  type="text"
+                  placeholder="DD/MM/AAAA"
+                  value={dataNascimento}
+                  onChange={(e) => setDataNascimento(e.target.value)}
+                  style={{ 
+                    padding: '14px', 
+                    borderRadius: '8px', 
+                    border: '1px solid #444', 
+                    backgroundColor: '#000', 
+                    color: '#fff', 
+                    fontSize: '16px',
+                    outline: 'none'
+                  }}
+                  required
+                />
+              </div>
+
+              <button 
+                type="submit" 
+                disabled={carregando}
+                style={{ 
+                  padding: '14px', 
+                  borderRadius: '8px', 
+                  border: 'none', 
+                  backgroundColor: carregando ? '#555' : '#ffcc00', 
+                  color: '#000', 
+                  fontWeight: 'bold', 
+                  fontSize: '16px', 
+                  cursor: carregando ? 'not-allowed' : 'pointer',
+                  transition: '0.3s'
+                }}
+              >
+                {carregando ? 'Verificando...' : 'Entrar no Sistema'}
+              </button>
+
+              {erro && (
+                <div style={{ 
+                  backgroundColor: 'rgba(255, 68, 68, 0.1)', 
+                  padding: '12px', 
+                  borderRadius: '6px', 
+                  border: '1px solid #ff4444' 
+                }}>
+                  <p style={{ color: '#ff4444', fontSize: '13px', textAlign: 'center', margin: 0 }}>
+                    {erro}
+                  </p>
+                </div>
+              )}
+            </form>
+          ) : (
+            /* Layout exibido após o Login com sucesso */
+            <div style={{ textAlign: 'center', animation: 'fadeIn 0.5s' }}>
+              <div style={{ 
+                width: '60px', 
+                height: '60px', 
+                backgroundColor: '#44ff44', 
+                borderRadius: '50%', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                margin: '0 auto 20px auto' 
+              }}>
+                <span style={{ color: '#000', fontSize: '30px' }}>✓</span>
+              </div>
+              <h2 style={{ color: '#fff', marginBottom: '8px' }}>Bem-vindo!</h2>
+              <p style={{ fontSize: '22px', fontWeight: 'bold', color: '#ffcc00', margin: '0 0 24px 0' }}>
+                {atleta.nome}
+              </p>
+              
+              <div style={{ 
+                backgroundColor: '#000', 
+                padding: '15px', 
+                borderRadius: '10px', 
+                textAlign: 'left',
+                fontSize: '14px',
+                color: '#aaa',
+                border: '1px solid #333'
+              }}>
+                <p style={{ margin: '5px 0' }}><strong>Status:</strong> Atleta Ativo</p>
+                <p style={{ margin: '5px 0' }}><strong>ID:</strong> {atleta.id}</p>
+              </div>
+
+              <button 
+                onClick={() => setAtleta(null)} 
+                style={{ 
+                  marginTop: '24px', 
+                  padding: '10px 20px', 
+                  borderRadius: '6px', 
+                  border: '1px solid #444', 
+                  backgroundColor: 'transparent', 
+                  color: '#888', 
+                  cursor: 'pointer' 
+                }}
+              >
+                Sair do Portal
+              </button>
+            </div>
+          )}
+        </div>
+      </main>
+
+      {/* Rodapé com a versão EXATAMENTE onde você pediu */}
+      <footer style={{ 
+        textAlign: 'center', 
+        padding: '30px', 
+        fontSize: '13px', 
+        color: '#555',
+        letterSpacing: '0.5px'
+      }}>
+        <p>© KFC 2026 (v1.0.6) - Todos os direitos reservados</p>
+      </footer>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+    </div>
+  )
 }
