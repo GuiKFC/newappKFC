@@ -12,44 +12,44 @@ export async function POST(request) {
       return new Response(JSON.stringify({ error: 'Data de nascimento é obrigatória.' }), { status: 400 })
     }
 
-    // 🕵️‍♂️ Remove barras e limpa o texto para pegar só números
-    const dataLimpa = dataNascimento.replace(/\D/g, '')
+    // 1. Se a data já vier no formato correto do banco (AAAA-MM-DD), usa ela direto
+    let dataFormatadaBanco = dataNascimento;
 
-    if (dataLimpa.length !== 8) {
-      return new Response(JSON.stringify({ error: 'Formato de data inválido. Use DD/MM/AAAA.' }), { status: 400 })
-    }
+    // 2. Se não estiver no formato do banco, vamos tratar o texto
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dataNascimento)) {
+      const dataLimpa = dataNascimento.replace(/\D/g, '')
 
-    const dia = dataLimpa.substring(0, 2)
-    const mes = dataLimpa.substring(2, 4)
-    const ano = dataLimpa.substring(4, 8)
-    const dataFormatadaBanco = `${ano}-${mes}-${dia}` // "1983-11-08"
+      if (dataLimpa.length !== 8) {
+        return new Response(JSON.stringify({ error: 'Formato de data inválido. Use DD/MM/AAAA ou AAAA-MM-DD.' }), { status: 400 })
+      }
 
-    // 🚨 BUSCA BLINDADA: Filtra contendo a data, evitando bugs de fuso horário (00:00:00)
-    const { data: atletas, error } = await supabase
-      .from('atletas')
-      .select('*')
-      .gte('data_nascimento', `${dataFormatadaBanco}T00:00:00`)
-      .lte('data_nascimento', `${dataFormatadaBanco}T23:59:59`)
-
-    // Se não achar por fuso horário, tenta a busca direta simples como plano B
-    let atletaFinal = atletas && atletas.length > 0 ? atletas[0] : null;
-
-    if (!atletaFinal) {
-      const { data: planoB } = await supabase
-        .from('atletas')
-        .select('*')
-        .eq('data_nascimento', dataFormatadaBanco)
-      
-      if (planoB && planoB.length > 0) {
-        atletaFinal = planoB[0];
+      // Se os 4 primeiros dígitos forem maiores que 1300, a pessoa digitou o ANO primeiro (AAAAMMDD)
+      if (parseInt(dataLimpa.substring(0, 4)) > 1300) {
+        const ano = dataLimpa.substring(0, 4)
+        const mes = dataLimpa.substring(4, 6)
+        const dia = dataLimpa.substring(6, 8)
+        dataFormatadaBanco = `${ano}-${mes}-${dia}`
+      } else {
+        // Se não, digitou o DIA primeiro (DDMMAAAA)
+        const dia = dataLimpa.substring(0, 2)
+        const mes = dataLimpa.substring(2, 4)
+        const ano = dataLimpa.substring(4, 8)
+        dataFormatadaBanco = `${ano}-${mes}-${dia}`
       }
     }
 
-    if (!atletaFinal) {
-      return new Response(JSON.stringify({ error: `Atleta não encontrado para a data ${dataNascimento} (${dataFormatadaBanco}).` }), { status: 404 })
+    // Busca direta no Supabase
+    const { data: atleta, error } = await supabase
+      .from('atletas')
+      .select('*')
+      .eq('data_nascimento', dataFormatadaBanco)
+      .single()
+
+    if (error || !atleta) {
+      return new Response(JSON.stringify({ error: `Atleta não encontrado no Supabase para a data: ${dataFormatadaBanco}` }), { status: 404 })
     }
 
-    return new Response(JSON.stringify(atletaFinal), {
+    return new Response(JSON.stringify(atleta), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     })
