@@ -1,16 +1,33 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styles from './atleta.module.css'
 
 export default function AtletaLogin() {
-  const VERSAO_PAGE = "v1.2.0"
+  const VERSAO_PAGE = "v1.2.1" // 👈 Nova versão com persistência
   
   const [dataNascimento, setDataNascimento] = useState('')
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
   const [atleta, setAtleta] = useState(null)
   const [versaoApi, setVersaoApi] = useState('v1.2.0')
+
+  // 🔐 PERSISTÊNCIA: Roda assim que a página carrega no navegador
+  useEffect(() => {
+    const sessaoSalva = localStorage.getItem('kfc_sessao_atleta')
+    if (sessaoSalva) {
+      try {
+        const dadosAtleta = JSON.parse(sessaoSalva)
+        setAtleta(dadosAtleta)
+        if (dadosAtleta.versionApi) {
+          setVersaoApi(dadosAtleta.versionApi)
+        }
+      } catch (e) {
+        // Se o dado estiver corrompido, limpa por segurança
+        localStorage.removeItem('kfc_sessao_atleta')
+      }
+    }
+  }, [])
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -35,12 +52,20 @@ export default function AtletaLogin() {
         throw new Error(dados.error || 'Erro ao processar login.')
       }
 
+      // 🔐 PERSISTÊNCIA: Salva os dados do login no cofre do navegador
+      localStorage.setItem('kfc_sessao_atleta', JSON.stringify(dados))
       setAtleta(dados)
     } catch (err) {
       setErro(err.message)
     } finally {
       setCarregando(false)
     }
+  }
+
+  // 🔐 LOGOUT: Limpa o cofre do navegador e desloga de verdade
+  const handleLogout = () => {
+    localStorage.removeItem('kfc_sessao_atleta')
+    setAtleta(null)
   }
 
   return (
@@ -90,7 +115,8 @@ export default function AtletaLogin() {
                 <p><strong>Número da Camisa:</strong> {atleta.numero || 'Não informada'}</p>
               </div>
 
-              <button onClick={() => setAtleta(null)} className={styles.logoutButton}>
+              {/* Usando a nova função de Logout seguro */}
+              <button onClick={handleLogout} className={styles.logoutButton}>
                 Sair do Portal
               </button>
             </div>
