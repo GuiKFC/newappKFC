@@ -6,37 +6,50 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export async function POST(request) {
   try {
-    const { dataNascimento } = await request.json() // Recebe "11/08/1983" ou "11081983"
+    const { dataNascimento } = await request.json()
 
     if (!dataNascimento) {
       return new Response(JSON.stringify({ error: 'Data de nascimento é obrigatória.' }), { status: 400 })
     }
 
-    // 🕵️‍♂️ TRADUTOR DE DATA: Remove barras e limpa o texto
-    const dataLimpa = dataNascimento.replace(/\D/g, '') // Garante que só fiquem números: "11081983"
+    // 🕵️‍♂️ Remove barras e limpa o texto para pegar só números
+    const dataLimpa = dataNascimento.replace(/\D/g, '')
 
     if (dataLimpa.length !== 8) {
       return new Response(JSON.stringify({ error: 'Formato de data inválido. Use DD/MM/AAAA.' }), { status: 400 })
     }
 
-    // Recorta a data brasileira (DD/MM/AAAA) e monta no padrão do banco (AAAA-MM-DD)
     const dia = dataLimpa.substring(0, 2)
     const mes = dataLimpa.substring(2, 4)
     const ano = dataLimpa.substring(4, 8)
-    const dataFormatadaBanco = `${ano}-${mes}-${dia}` // Vira "1983-11-08" 🎉
+    const dataFormatadaBanco = `${ano}-${mes}-${dia}` // "1983-11-08"
 
-    // Busca no Supabase com a data certinha
-    const { data: atleta, error } = await supabase
+    // 🚨 BUSCA BLINDADA: Filtra contendo a data, evitando bugs de fuso horário (00:00:00)
+    const { data: atletas, error } = await supabase
       .from('atletas')
       .select('*')
-      .eq('data_nascimento', dataFormatadaBanco)
-      .single()
+      .gte('data_nascimento', `${dataFormatadaBanco}T00:00:00`)
+      .lte('data_nascimento', `${dataFormatadaBanco}T23:59:59`)
 
-    if (error || !atleta) {
-      return new Response(JSON.stringify({ error: 'Atleta não encontrado.' }), { status: 404 })
+    // Se não achar por fuso horário, tenta a busca direta simples como plano B
+    let atletaFinal = atletas && atletas.length > 0 ? atletas[0] : null;
+
+    if (!atletaFinal) {
+      const { data: planoB } = await supabase
+        .from('atletas')
+        .select('*')
+        .eq('data_nascimento', dataFormatadaBanco)
+      
+      if (planoB && planoB.length > 0) {
+        atletaFinal = planoB[0];
+      }
     }
 
-    return new Response(JSON.stringify(atleta), {
+    if (!atletaFinal) {
+      return new Response(JSON.stringify({ error: `Atleta não encontrado para a data ${dataNascimento} (${dataFormatadaBanco}).` }), { status: 404 })
+    }
+
+    return new Response(JSON.stringify(atletaFinal), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     })
