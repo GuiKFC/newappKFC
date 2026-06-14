@@ -1,10 +1,15 @@
+/* ==========================================================================
+   PORTAL DO ATLETA KFC - IDENTIDADE VISUAL OFICIAL (PRETO, VERMELHO E BRANCO)
+   ========================================================================== */
+
 .container {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  background-color: #0a0a0a;
+  justify-content: space-between;
+  background-color: #0d0d0d; /* Preto profundo de fundo */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   color: #ffffff;
-  font-family: system-ui, -apple-system, sans-serif;
 }
 
 .main {
@@ -15,32 +20,39 @@
   padding: 20px;
 }
 
+/* Card Principal do Portal */
 .card {
-  background-color: #1a1a1a;
-  padding: 40px;
-  border-radius: 16px;
+  background: #1a1a1a; /* Cinza quase preto para dar relevo */
+  border-top: 5px solid #e10600; /* Linha de destaque Vermelho KFC no topo */
+  border-radius: 12px;
+  padding: 40px 30px;
   width: 100%;
-  max-width: 400px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-  border: 1px solid #333;
+  max-width: 420px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  transition: all 0.3s ease;
 }
 
+/* Cabeçalho */
 .header {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 35px;
 }
 
 .title {
-  color: #ffcc00;
-  font-size: 28px;
-  margin: 0 0 10px 0;
+  font-size: 26px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #ffffff;
+  margin-bottom: 8px;
 }
 
 .subtitle {
-  color: #888;
   font-size: 14px;
+  color: #a0a0a0;
 }
 
+/* Formulário e Inputs */
 .form {
   display: flex;
   flex-direction: column;
@@ -50,111 +62,169 @@
 .inputGroup {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .label {
-  font-size: 14px;
-  font-weight: bold;
-  color: #ccc;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #a0a0a0;
 }
 
 .input {
+  background-color: #262626;
+  border: 2px solid #333333;
+  border-radius: 6px;
   padding: 14px;
-  border-radius: 8px;
-  border: 1px solid #444;
-  background-color: #000;
-  color: #fff;
+  color: #ffffff;
   font-size: 16px;
-  outline: none;
+  text-align: center;
+  letter-spacing: 2px;
+  transition: all 0.2s ease;
 }
 
+.input:focus {
+  outline: none;
+  border-color: #e10600; /* Borda acende em Vermelho KFC ao clicar */
+  background-color: #2d2d2d;
+}
+
+/* Botão de Entrada (Vermelho KFC) */
 .button {
-  padding: 14px;
-  border-radius: 8px;
+  background-color: #e10600; 
+  color: #ffffff;
   border: none;
-  background-color: #ffcc00;
-  color: #000;
-  font-weight: bold;
+  border-radius: 6px;
+  padding: 16px;
   font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  margin-top: 10px;
+}
+
+.button:hover:not(:disabled) {
+  background-color: #b30500; /* Vermelho mais escuro no hover */
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
 .button:disabled {
-  background-color: #555;
+  background-color: #555555;
+  color: #aaaaaa;
   cursor: not-allowed;
 }
 
+/* Caixa de Erro */
 .errorBox {
-  background-color: rgba(255, 68, 68, 0.1);
-  padding: 12px;
+  background-color: rgba(225, 6, 0, 0.1);
+  border: 1px solid #e10600;
   border-radius: 6px;
-  border: 1px solid #ff4444;
+  padding: 12px;
+  text-align: center;
 }
 
 .errorText {
-  color: #ff4444;
-  font-size: 13px;
-  text-align: center;
+  color: #ff4d4d;
+  font-size: 14px;
   margin: 0;
 }
 
+/* Painel de Sucesso (Logado) */
 .successBox {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .iconCheck {
+  background-color: #e10600; /* Círculo vermelho */
+  color: #ffffff;
   width: 60px;
   height: 60px;
-  background-color: #44ff44;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 20px auto;
-}
-
-.iconCheck span {
-  color: #000;
-  font-size: 30px;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(225, 6, 0, 0.4);
 }
 
 .welcomeText {
-  font-size: 22px;
-  font-weight: bold;
-  color: #ffcc00;
-  margin: 0 0 24px 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-top: 5px;
+  margin-bottom: 25px;
 }
 
+/* Bloco de Informações do Atleta */
 .infoBox {
-  background-color: #000;
-  padding: 15px;
-  border-radius: 10px;
+  background-color: #262626;
+  border-left: 4px solid #e10600; /* Tracinho vermelho na lateral */
+  border-radius: 0 6px 6px 0;
+  padding: 20px;
+  width: 100%;
   text-align: left;
-  font-size: 14px;
-  color: #aaa;
-  border: 1px solid #333;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .infoBox p {
-  margin: 5px 0;
+  margin: 0;
+  font-size: 15px;
+  color: #e0e0e0;
 }
 
+.infoBox strong {
+  color: #a0a0a0;
+  text-transform: uppercase;
+  font-size: 12px;
+  display: inline-block;
+  width: 140px;
+}
+
+/* Botão de Sair (Estilo Outline Branco) */
 .logoutButton {
-  margin: 24px 0 0 0;
-  padding: 10px 20px;
-  border-radius: 6px;
-  border: 1px solid #444;
   background-color: transparent;
-  color: #888;
+  color: #ffffff;
+  border: 2px solid #444444;
+  border-radius: 6px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
 }
 
+.logoutButton:hover {
+  border-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Rodapé de Versões */
 .footer {
   text-align: center;
-  padding: 30px;
-  font-size: 13px;
-  color: #555;
-  letter-spacing: '0.5px';
+  padding: 20px;
+  background-color: #050505; /* Rodapé um pouco mais escuro */
+  border-top: 1px solid #1a1a1a;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 12px;
+  color: #666666;
+  letter-spacing: 0.5px;
 }
