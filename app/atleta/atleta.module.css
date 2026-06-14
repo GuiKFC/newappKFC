@@ -1,230 +1,112 @@
-/* ==========================================================================
-   PORTAL DO ATLETA KFC - IDENTIDADE VISUAL OFICIAL (PRETO, VERMELHO E BRANCO)
-   ========================================================================== */
+/* --- Elementos do Painel Informativo Público v1.3.0 --- */
 
-.container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background-color: #0d0d0d; /* Preto profundo de fundo */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  color: #ffffff;
-}
-
-.main {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.publicPortal {
+  max-width: 600px;
+  margin: 60px auto;
   padding: 20px;
-}
-
-/* Card Principal do Portal */
-.card {
-  background: #1a1a1a; /* Cinza quase preto para dar relevo */
-  border-top: 5px solid #e10600; /* Linha de destaque Vermelho KFC no topo */
-  border-radius: 12px;
-  padding: 40px 30px;
-  width: 100%;
-  max-width: 420px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-  transition: all 0.3s ease;
-}
-
-/* Cabeçalho */
-.header {
   text-align: center;
-  margin-bottom: 35px;
+  width: 100%;
 }
 
-.title {
-  font-size: 26px;
+.publicHeader {
+  margin-bottom: 40px;
+}
+
+.logoBadge {
+  background-color: #e10600;
+  color: #fff;
+  display: inline-block;
+  font-size: 24px;
+  font-weight: 900;
+  padding: 8px 16px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+}
+
+.mainTitle {
+  font-size: 32px;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #ffffff;
-  margin-bottom: 8px;
+  margin: 0 0 10px 0;
 }
 
-.subtitle {
-  font-size: 14px;
+.mainSubtitle {
   color: #a0a0a0;
-}
-
-/* Formulário e Inputs */
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.inputGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.label {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #a0a0a0;
-}
-
-.input {
-  background-color: #262626;
-  border: 2px solid #333333;
-  border-radius: 6px;
-  padding: 14px;
-  color: #ffffff;
   font-size: 16px;
-  text-align: center;
-  letter-spacing: 2px;
-  transition: all 0.2s ease;
-}
-
-.input:focus {
-  outline: none;
-  border-color: #e10600; /* Borda acende em Vermelho KFC ao clicar */
-  background-color: #2d2d2d;
-}
-
-/* Botão de Entrada (Vermelho KFC) */
-.button {
-  background-color: #e10600; 
-  color: #ffffff;
-  border: none;
-  border-radius: 6px;
-  padding: 16px;
-  font-size: 16px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-  margin-top: 10px;
-}
-
-.button:hover:not(:disabled) {
-  background-color: #b30500; /* Vermelho mais escuro no hover */
-}
-
-.button:active:not(:disabled) {
-  transform: scale(0.98);
-}
-
-.button:disabled {
-  background-color: #555555;
-  color: #aaaaaa;
-  cursor: not-allowed;
-}
-
-/* Caixa de Erro */
-.errorBox {
-  background-color: rgba(225, 6, 0, 0.1);
-  border: 1px solid #e10600;
-  border-radius: 6px;
-  padding: 12px;
-  text-align: center;
-}
-
-.errorText {
-  color: #ff4d4d;
-  font-size: 14px;
   margin: 0;
 }
 
-/* Painel de Sucesso (Logado) */
-.successBox {
-  text-align: center;
+.newsGrid {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 15px;
+  margin-bottom: 40px;
 }
 
-.iconCheck {
-  background-color: #e10600; /* Círculo vermelho */
-  color: #ffffff;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 15px rgba(225, 6, 0, 0.4);
-}
-
-.welcomeText {
-  font-size: 24px;
-  font-weight: 700;
-  color: #ffffff;
-  margin-top: 5px;
-  margin-bottom: 25px;
-}
-
-/* Bloco de Informações do Atleta */
-.infoBox {
-  background-color: #262626;
-  border-left: 4px solid #e10600; /* Tracinho vermelho na lateral */
-  border-radius: 0 6px 6px 0;
+.newsCard {
+  background-color: #1a1a1a;
+  border-left: 4px solid #333;
+  border-radius: 0 8px 8px 0;
   padding: 20px;
-  width: 100%;
   text-align: left;
-  margin-bottom: 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
 
-.infoBox p {
-  margin: 0;
-  font-size: 15px;
-  color: #e0e0e0;
-}
-
-.infoBox strong {
-  color: #a0a0a0;
+.newsTag {
+  background-color: #262626;
+  color: #e10600;
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  font-size: 12px;
-  display: inline-block;
-  width: 140px;
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 
-/* Botão de Sair (Estilo Outline Branco) */
-.logoutButton {
-  background-color: transparent;
-  color: #ffffff;
-  border: 2px solid #444444;
-  border-radius: 6px;
-  padding: 12px 24px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  width: 100%;
+.newsCard h3 {
+  margin: 10px 0 5px 0;
+  font-size: 18px;
 }
 
-.logoutButton:hover {
-  border-color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-/* Rodapé de Versões */
-.footer {
-  text-align: center;
-  padding: 20px;
-  background-color: #050505; /* Rodapé um pouco mais escuro */
-  border-top: 1px solid #1a1a1a;
-}
-
-.footer p {
+.newsCard p {
   margin: 0;
-  font-size: 12px;
-  color: #666666;
-  letter-spacing: 0.5px;
+  color: #a0a0a0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Botão de chamada para o Vestiário */
+.buttonVestiarioCall {
+  background-color: #e10600;
+  color: white;
+  border: none;
+  padding: 18px 32px;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  box-shadow: 0 4px 15px rgba(225, 6, 0, 0.3);
+  transition: background-color 0.2s;
+}
+
+.buttonVestiarioCall:hover {
+  background-color: #b30500;
+}
+
+/* Botão voltar interno do formulário */
+.backButton {
+  background: transparent;
+  border: 1px dashed #444;
+  color: #a0a0a0;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.backButton:hover {
+  border-color: #a0a0a0;
+  color: #fff;
 }

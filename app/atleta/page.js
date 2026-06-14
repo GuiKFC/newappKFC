@@ -3,16 +3,18 @@
 import { useState, useEffect } from 'react'
 import styles from './atleta.module.css'
 
-export default function AtletaLogin() {
-  const VERSAO_PAGE = "v1.2.1" // 👈 Nova versão com persistência
+export default function KfcPortal() {
+  const VERSAO_PAGE = "v1.3.0" // 👈 Nova versão arquitetural
   
   const [dataNascimento, setDataNascimento] = useState('')
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
   const [atleta, setAtleta] = useState(null)
   const [versaoApi, setVersaoApi] = useState('v1.2.0')
+  
+  // Controle para exibir ou não a modal/tela de login do Vestiário
+  const [verVestiario, setVerVestiario] = useState(false)
 
-  // 🔐 PERSISTÊNCIA: Roda assim que a página carrega no navegador
   useEffect(() => {
     const sessaoSalva = localStorage.getItem('kfc_sessao_atleta')
     if (sessaoSalva) {
@@ -23,7 +25,6 @@ export default function AtletaLogin() {
           setVersaoApi(dadosAtleta.versionApi)
         }
       } catch (e) {
-        // Se o dado estiver corrompido, limpa por segurança
         localStorage.removeItem('kfc_sessao_atleta')
       }
     }
@@ -33,7 +34,6 @@ export default function AtletaLogin() {
     e.preventDefault()
     setCarregando(true)
     setErro('')
-    setAtleta(null)
 
     try {
       const response = await fetch('https://newapp-kfc.vercel.app/api/atleta/login', {
@@ -49,10 +49,9 @@ export default function AtletaLogin() {
       }
 
       if (!response.ok) {
-        throw new Error(dados.error || 'Erro ao processar login.')
+        throw new Error(dados.error || 'Erro ao acessar o Vestiário.')
       }
 
-      // 🔐 PERSISTÊNCIA: Salva os dados do login no cofre do navegador
       localStorage.setItem('kfc_sessao_atleta', JSON.stringify(dados))
       setAtleta(dados)
     } catch (err) {
@@ -62,67 +61,109 @@ export default function AtletaLogin() {
     }
   }
 
-  // 🔐 LOGOUT: Limpa o cofre do navegador e desloga de verdade
   const handleLogout = () => {
     localStorage.removeItem('kfc_sessao_atleta')
     setAtleta(null)
+    setVerVestiario(false)
   }
 
   return (
     <div className={styles.container}>
-      <main className={styles.main}>
-        <div className={styles.card}>
-          <div className={styles.header}>
-             <h1 className={styles.title}>Portal do Atleta</h1>
-             <p className={styles.subtitle}>Acesse seu extrato e informações</p>
-          </div>
-          
-          {!atleta ? (
-            <form onSubmit={handleLogin} className={styles.form}>
-              <div className={styles.inputGroup}>
-                <label className={styles.label}>Data de Nascimento</label>
-                <input
-                  type="text"
-                  placeholder="DD/MM/AAAA"
-                  value={dataNascimento}
-                  onChange={(e) => setDataNascimento(e.target.value)}
-                  className={styles.input}
-                  required
-                />
-              </div>
+      
+      {/* 📋 SEÇÃO 1: PORTAL INFORMATIVO PÚBLICO (Aparece se não estiver logado olhando o vestiário) */}
+      {!verVestiario && !atleta ? (
+        <div className={styles.publicPortal}>
+          <header className={styles.publicHeader}>
+            <div className={styles.logoBadge}>KFC</div>
+            <h1 className={styles.mainTitle}>Kioske Futebol Clube</h1>
+            <p className={styles.mainSubtitle}>Painel Oficial de Notícias e Informações</p>
+          </header>
 
-              <button type="submit" disabled={carregando} className={styles.button}>
-                {carregando ? 'Verificando...' : 'Entrar no Sistema'}
-              </button>
-
-              {erro && (
-                <div className={styles.errorBox}>
-                  <p className={styles.errorText}>{erro}</p>
-                </div>
-              )}
-            </form>
-          ) : (
-            <div className={styles.successBox}>
-              <div className={styles.iconCheck}>
-                <span>✓</span>
-              </div>
-              <h2>Bem-vindo!</h2>
-              <p className={styles.welcomeText}>{atleta.nome}</p>
-              
-              <div className={styles.infoBox}>
-                <p><strong>Status:</strong> Atleta Ativo</p>
-                <p><strong>ID:</strong> {atleta.id}</p>
-                <p><strong>Número da Camisa:</strong> {atleta.numero || 'Não informada'}</p>
-              </div>
-
-              {/* Usando a nova função de Logout seguro */}
-              <button onClick={handleLogout} className={styles.logoutButton}>
-                Sair do Portal
-              </button>
+          <section className={styles.newsGrid}>
+            <div className={styles.newsCard}>
+              <span className={styles.newsTag}>Próximo Jogo</span>
+              <h3>KFC vs Rival FC</h3>
+              <p>Domingo às 10:00h - Arena Kioske. Compareça com o manto sagrado!</p>
             </div>
-          )}
+
+            <div className={styles.newsCard}>
+              <span className={styles.newsTag}>Aviso</span>
+              <h3>Manutenção de Uniformes</h3>
+              <p>Retirada dos novos kits de treino agendada para a próxima terça-feira.</p>
+            </div>
+          </section>
+
+          {/* Botão de chamada para a Área Restrita */}
+          <button 
+            className={styles.buttonVestiarioCall} 
+            onClick={() => setVerVestiario(true)}
+          >
+            🔒 Acessar Vestiário do Atleta
+          </button>
         </div>
-      </main>
+      ) : (
+        /* 🔒 SEÇÃO 2: ÁREA RESTRITA (FORMULÁRIO OU CONTEÚDO DO VESTIÁRIO) */
+        <main className={styles.main}>
+          <div className={styles.card}>
+            
+            <div className={styles.header}>
+               <h1 className={styles.title}>🚪 Vestiário do Atleta</h1>
+               <p className={styles.subtitle}>Área Restrita KFC</p>
+            </div>
+            
+            {!atleta ? (
+              <form onSubmit={handleLogin} className={styles.form}>
+                <div className={styles.inputGroup}>
+                  <label className={styles.label}>Confirme sua Data de Nascimento</label>
+                  <input
+                    type="text"
+                    placeholder="DD/MM/AAAA"
+                    value={dataNascimento}
+                    onChange={(e) => setDataNascimento(e.target.value)}
+                    className={styles.input}
+                    required
+                  />
+                </div>
+
+                <button type="submit" disabled={carregando} className={styles.button}>
+                  {carregando ? 'Abrindo Armário...' : 'Liberar Entrada'}
+                </button>
+
+                <button 
+                  type="button" 
+                  className={styles.backButton} 
+                  onClick={() => setVerVestiario(false)}
+                >
+                  Voltar ao Painel Público
+                </button>
+
+                {erro && (
+                  <div className={styles.errorBox}>
+                    <p className={styles.errorText}>{erro}</p>
+                  </div>
+                )}
+              </form>
+            ) : (
+              /* CONTEÚDO PRIVADO DO ATLETA DENTRO DO VESTIÁRIO */
+              <div className={styles.successBox}>
+                <div className={styles.iconCheck}>✓</div>
+                <h2>Seja bem-vindo ao seu armário!</h2>
+                <p className={styles.welcomeText}>{atleta.nome}</p>
+                
+                <div className={styles.infoBox}>
+                  <p><strong>Elenco:</strong> Atleta Titular</p>
+                  <p><strong>Número da Camisa:</strong> {atleta.numero || 'Sem número'}</p>
+                  <p><strong>ID do Registro:</strong> #00{atleta.id}</p>
+                </div>
+
+                <button onClick={handleLogout} className={styles.logoutButton}>
+                  Sair do Vestiário (Trancar Armário)
+                </button>
+              </div>
+            )}
+          </div>
+        </main>
+      )}
 
       <footer className={styles.footer}>
         <p>© KFC 2026 | Page: {VERSAO_PAGE} | Route API: {versaoApi}</p>
